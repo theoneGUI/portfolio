@@ -1,0 +1,256 @@
+<html>
+<head>
+<title>Fake bitcoin</title>
+<author>Aidan Wright</author>
+</head>
+
+<body>
+<h1>Fake bitcoin</h1>
+<p>Choose your action</p>
+
+
+ <input type="button" data-action="1" value="add block"></input><br>
+ <input type="button" data-action="2" value="verify blockchain"></input><br>
+ <input type="button" data-action="3" value="view blockchain"></input><br>
+ <input type="button" data-action="4" value="corrupt block"></input><br>
+ <input type="button" data-action="5" value="fix corruption"></input><br>
+ <input type="button" data-action="6" value="export blockchain"></input><br>
+ <input type="button" data-action="7" value="change difficulty"></input><br>
+ <input type="button" data-action="8" value="print all recipients by a sender"></input><br>
+ <input type="button" data-action="9" value="print all senders by a recipient"></input><br>
+<input type="button" data-action="10" value="terminate program"></input><br>
+<input type="button" data-action="11" value="terminate web server only"></input>
+<a id="downloadAnchorElem" style="display:none"></a>
+<p>Output:</p>
+<div id="outputArea" style="width: 50% !important">
+</div>
+
+<div id="displayArea" style="width:40% !important; height: 100% !important; position:absolute; right:10%; top:0;">
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+<script>
+    function _(x) {return document.getElementById(x);}
+
+    function requestVerb(verb, resource, options, callback) {
+        var opts = options;
+        $.ajax(
+            {
+                type: verb,
+                url: ""+resource,
+                dataType : "json",
+                contentType: 'application/json',
+                async : true,
+                data: (opts == null ? null : JSON.stringify(opts)),
+                success : function(data) {
+                    callback(data);
+                }
+            }
+        )
+    }
+
+    function requestVerbSync(verb, resource, options, callback) {
+        var opts = options;
+        $.ajax(
+            {
+                type: verb,
+                url: ""+resource,
+                dataType : "json",
+                contentType: 'application/json',
+                async : false,
+                data: (opts == null ? null : JSON.stringify(opts)),
+                success : function(data) {
+                    callback(data);
+                }
+            }
+        )
+    }
+
+    var buttons = document.getElementsByTagName("INPUT");
+    for (let i of buttons) {
+        i.onclick = function() {
+            let action = i.getAttribute("data-action");
+            let options = {"action" : action};
+
+                 if (action == "1") {
+                let sender = prompt("Who is the sender?");
+                let receiver = prompt("Who is the receiver?");
+                let dat = prompt("What is the data?");
+
+                options["send"] = sender;
+                options["recv"] = receiver;
+                options["data"] = dat;
+                requestVerbSync("GET", "/difficulty", null, function(data) {
+                    _("outputArea").innerHTML += "<p><pre>Adding block to chain... This may take a bit (current chain difficulty is "+data["difficulty"]+")</pre></p>";
+                });
+            }
+            else if (action == "4") {
+                requestVerbSync("POST", "/inquiry", {"action" : action}, function(data) {
+                    let diffLower = data.indexLowerBound;
+                    let diffUpper = data.indexUpperBound;
+                    let chainlen = data.chainLength;
+                    let number = -1;
+                    while (number > diffUpper || number < diffLower) {
+                        number = parseInt(prompt("Enter a block number between " + diffLower + " and " + diffUpper + " (inclusive): "));
+                        if (number == NaN)
+                            continue;
+                    }
+                    options["index"] = number;
+                });
+                options["newdata"] = prompt("Enter the new data for the selected block: ");
+            }
+            else if (action == "5") {
+                _("outputArea").innerHTML += "<p><pre>Fixing corruption... please wait</pre></p>"
+            }
+            else if (action == "7") {
+                requestVerbSync("POST", "/inquiry", {"action" : action}, function(data) {
+                    let diffLower = data.diffLowerBound;
+                    let diffUpper = data.diffUpperBound;
+                    let number = -1;
+                    while (number > diffUpper || number < diffLower) {
+                        number = parseInt(prompt("Enter a new difficulty between " + diffLower + " and " + diffUpper + " (inclusive): "));
+                        if (number == NaN)
+                            continue;
+                    }
+                    options["newdiff"] = number;
+                });
+            }
+            else if (action == "8") {
+                var input = prompt("Which sender whose recipients do you want to look up?");
+                options["sender"] = input;
+            }
+            else if (action == "9") {
+                var input = prompt("Which recipient whose senders do you want to look up?");
+                options["recip"] = input;
+            }
+
+            requestVerb("POST", "/action", options, function(data) {
+                alert(data.message);
+                if (action == "1")
+                    _("outputArea").innerHTML += "<p><pre>Added block.</pre></p>";
+                else if (action == "3") {
+                    let drawRoot = _("displayArea");
+                    drawRoot.innerHTML = "";
+
+                    let genP = document.createElement("P");
+                    genP.innerText = "Starting with the genesis block:";
+                    drawRoot.appendChild(genP);
+
+                    let chain = data.blockchain;
+                    for (let block of chain) {
+                        let container = document.createElement("DIV");
+                        container.setAttribute("style", "border-style: solid; border-color: black; border-radius: 2px; margin-bottom: 20px;");
+
+                        let send = document.createElement("P");
+                        send.innerText = "Sender: "+block.sender
+
+                        let recv = document.createElement("P");
+                        recv.innerText = "Receiver: "+block.recipient;
+
+                        let dat = document.createElement("P");
+                        dat.innerText = "Data: "+block.data;
+
+                        let nonce = document.createElement("P");
+                        nonce.innerText = "Nonce: "+block.nonce;
+
+                        let prev = document.createElement("P");
+                        prev.innerText = "Previous Hash: "+block.previoushash;
+
+                        container.appendChild(send);
+                        container.appendChild(recv);
+                        container.appendChild(dat);
+                        container.appendChild(nonce);
+                        container.appendChild(prev);
+                        drawRoot.appendChild(container);
+                    }
+                    let chainhash = document.createElement("P");
+                    chainhash.innerText = "Current chain hash: " + data.chainhash;
+                    drawRoot.appendChild(chainhash);
+                }
+                else if (action == "6") {
+                    // this scope from: https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
+                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSON.parse(data.data)));
+                    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+                    dlAnchorElem.setAttribute("href",     dataStr     );
+                    dlAnchorElem.setAttribute("download", "blockchain.json");
+                    dlAnchorElem.click();
+                }
+                else if (action == "8") {
+                    let drawRoot = _("displayArea");
+                    drawRoot.innerHTML = "";
+
+                    if (data.data == null) {
+                        let container = document.createElement("DIV");
+                        container.setAttribute("style", "border-style: solid; border-color: black; border-radius: 2px; margin-bottom: 10px;");
+
+                        let send = document.createElement("P");
+                        send.innerHTML = "Nobody received from that sender";
+
+                        container.appendChild(send);
+                        drawRoot.appendChild(container);
+                    }
+                    else {
+                        let chain = data.data;
+                        let sender = chain["sender"];
+                        let container = document.createElement("DIV");
+                        container.setAttribute("style", "border-style: solid; border-color: black; border-radius: 2px; margin-bottom: 10px;");
+
+                        let send = document.createElement("P");
+                        send.innerHTML = "Sender: "+sender+"<br>Those who received from "+sender+": ";
+
+                        let recvContainer = document.createElement("UL");
+                        for (let recv of chain["receivers"]) {
+                            let receiver = document.createElement("LI");
+                            receiver.innerText = recv;
+                            recvContainer.appendChild(receiver);
+                        }
+                        container.appendChild(send);
+                        container.appendChild(recvContainer);
+                        drawRoot.appendChild(container);
+                    }
+
+                }
+                else if (action == "9") {
+                    let drawRoot = _("displayArea");
+                    drawRoot.innerHTML = "";
+
+                    if (data.data == null) {
+                        let container = document.createElement("DIV");
+                        container.setAttribute("style", "border-style: solid; border-color: black; border-radius: 2px; margin-bottom: 10px;");
+
+                        let send = document.createElement("P");
+                        send.innerHTML = "Nobody sent to that receiver";
+
+                        container.appendChild(send);
+                        drawRoot.appendChild(container);
+                    }
+                    else {
+                        let chain = data.data;
+                        let recip = chain["receiver"];
+                        let container = document.createElement("DIV");
+                        container.setAttribute("style", "border-style: solid; border-color: black; border-radius: 2px; margin-bottom: 10px;");
+
+                        let recv = document.createElement("P");
+                        recv.innerHTML = "Receiver: "+recip+"<br>Those who sent to "+recip+": ";
+
+                        let sendContainer = document.createElement("UL");
+                        for (let snd of chain["senders"]) {
+                            let sender = document.createElement("LI");
+                            sender.innerText = snd;
+                            sendContainer.appendChild(sender);
+                        }
+                        container.appendChild(recv);
+                        container.appendChild(sendContainer);
+                        drawRoot.appendChild(container);
+                    }
+
+                }
+                else
+                    _("outputArea").innerHTML += "<p><pre>"+data.message+"</pre></p>";
+            })
+        }
+    }
+</script>
+</body>
+</html>

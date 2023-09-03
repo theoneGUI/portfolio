@@ -1,0 +1,123 @@
+{
+	"places": [{
+			"index": 1,
+			"name": "One World",
+			"x": 279237.0908416255,
+			"y": 4508729.142659771,
+			"latitude": 40.6999114,
+			"longitude": -89.613004
+		},
+		{
+			"index": 2,
+			"name": "Hartmann Center",
+			"x": 279037.6701374086,
+			"y": 4508565.083665349,
+			"latitude": 40.69838155,
+			"longitude": -89.61530427152485
+		},
+		{
+			"index": 3,
+			"name": "Markin Family Student Recreation Center",
+			"x": 278804.54602976394,
+			"y": 4508412.123931407,
+			"latitude": 40.6969425,
+			"longitude": -89.61800685716139
+		},
+		{
+			"index": 4,
+			"name": "Morgan Hall",
+			"x": 278834.98450432316,
+			"y": 4508496.512059585,
+			"latitude": 40.6977101,
+			"longitude": -89.6176767
+		},
+		{
+			"index": 5,
+			"name": "Renaissance Coliseum",
+			"x": 278815.87348339206,
+			"y": 4508657.350046642,
+			"latitude": 40.6991524,
+			"longitude": -89.61795937285294
+		},
+		{
+			"index": 6,
+			"name": "Swords Hall",
+			"x": 278979.5784473747,
+			"y": 4508387.06138376,
+			"latitude": 40.6967639,
+			"longitude": -89.61592845
+		},
+		{
+			"index": 7,
+			"name": "Olin Hall",
+			"x": 279034.51888488827,
+			"y": 4508407.376514515,
+			"latitude": 40.69696145,
+			"longitude": -89.61528599119372
+		},
+		{
+			"index": 8,
+			"name": "Cullom Davis Library",
+			"x": 278916.3719069121,
+			"y": 4508399.262137504,
+			"latitude": 40.69685675,
+			"longitude": -89.61668009952541
+		},
+		{
+			"index": 9,
+			"name": "Westlake Hall",
+			"x": 278892.93646267976,
+			"y": 4508456.076043943,
+			"latitude": 40.69736175,
+			"longitude": -89.6169772202114
+		},
+		{
+			"index": 10,
+			"name": "Bradley Hall",
+			"x": 278884.946010537,
+			"y": 4508546.326794167,
+			"latitude": 40.6981718,
+			"longitude": -89.6171035059322
+		},
+		{
+			"index": 11,
+			"name": "Business And Engineering Convergence Center",
+			"x": 278969.6113868747,
+			"y": 4508663.663073862,
+			"latitude": 40.699250449999994,
+			"longitude": -89.61614374414918
+		},
+		{
+			"index": 12,
+			"name": "Caterpillar Global Communications Center",
+			"x": 279298.18057562376,
+			"y": 4508486.401358405,
+			"latitude": 40.69774325,
+			"longitude": -89.61219625017702
+		},
+		{
+			"index": 13,
+			"name": "Dingeldine",
+			"x": 279006.36435636,
+			"y": 4508166.974397632,
+			"latitude": 40.69479045,
+			"longitude": -89.61553422172739
+		},
+		{
+			"index": 14,
+			"name": "Comstock Hall",
+			"x": 278950.15923200944,
+			"y": 4508316.376790953,
+			"latitude": 40.6961199,
+			"longitude": -89.61625139946808
+		},
+		{
+			"index": 15,
+			"name": "Heuser",
+			"x": 279040.7659679542,
+			"y": 4508289.6592372125,
+			"latitude": 40.69588975285332,
+			"longitude": -89.61525422655568
+		}
+	]
+}

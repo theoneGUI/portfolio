@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><kml xmlns = "http://www.opengis.net/kml/2.2">  <Document>    <name>TSP Brute Force &amp; Approximation</name>    <description>Shortest path available and approximation</description>    <Style id="line1">      <LineStyle>        <color>ff00ffff</color>       <width>4</width>      </LineStyle>    </Style>    <Style id="line2">      <LineStyle>        <color>ff0000ff</color>       <width>4</width>      </LineStyle>    </Style>    <Placemark>      <name>Brute Force</name>      <description>Brute force's solution to the TSP</description>      <styleUrl>#line1</styleUrl>      <LineString>        <altitudeMode>absolute</altitudeMode>        <coordinates>-89.613004,40.699911,275
+-89.615304,40.698382,275
+-89.615286,40.696961,275
+-89.615928,40.696764,275
+-89.616680,40.696857,275
+-89.618007,40.696942,275
+-89.617677,40.697710,275
+-89.617959,40.699152,275
+-89.613004,40.699911,275
+        </coordinates>      </LineString>    </Placemark>    <Placemark>      <name>Prim's Solution</name>      <description>Efficient way to solve the TSP with Prim's algorithm</description>      <styleUrl>#line2</styleUrl>      <LineString>        <altitudeMode>absolute</altitudeMode>        <coordinates>-89.613004,40.699911,222
+-89.615304,40.698382,222
+-89.615286,40.696961,222
+-89.615928,40.696764,222
+-89.616680,40.696857,222
+-89.618007,40.696942,222
+-89.617677,40.697710,222
+-89.617959,40.699152,222
+-89.613004,40.699911,222
+        </coordinates>      </LineString>    </Placemark>  </Document></kml>
